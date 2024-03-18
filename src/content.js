@@ -1,33 +1,55 @@
 import React from 'react'
 import { useState } from 'react';
+import { FaTrashAlt } from 'react-icons/fa'
 
 const Content = () => {
-    const [ name,setName ] = useState("Shashidhar");
-    const [count,setCount] = useState(0);
+    const [ items,setItems ] = useState([
+        {
+            id: 1,
+            checked: true,
+            item: "One half pound bag of Cocoa Covered Almonds Unsalted"
+        },
+        {
+            id: 2,
+            checked: false,
+            item: "Item 2"
+        },
+        {
+            id: 3,
+            checked: false,
+            item: "Item 3"
+        }
+    ]);
 
-    const handleNameChange = ()=>{
-        const names = ['Shashidhar','Mohit','Atharva'];
-        const int = Math.floor(Math.random()*3);
-        setName(names[int]);
-    }
-    const handleClickEvent = ()=>{
-        setCount(count+1);
-        setCount(count+1);
-        console.log(count);
+    const handleCheck = (id)=>{
+        const listItems = items.map((item) => item.id === id ? {...item , checked: !item.checked} : item);
+        setItems(listItems);
+        localStorage.setItem('shoppingList', JSON.stringify(listItems));
     }
 
-    const handleClickEvent2 = ()=>{
-        console.log(count);
+    const handleDelete = (id)=>{
+        const listItems = items.filter((item)=> item.id!== id);
+        setItems(listItems);
+        localStorage.setItem('shoppingList',JSON.stringify(listItems));
     }
 
   return (
     <main>
-      <p onDoubleClick={handleClickEvent}>
-        Hello {name}
-      </p>
-      <button onClick={handleNameChange}>Change Name</button>  {/*Function need not be called...if called means it automatically calls the function when html page loads */}
-      <button onClick={handleClickEvent}>click</button>{/*In order to use parameters in function we must have to use anonymous function*/}
-      <button onClick={handleClickEvent2}>Click This</button>
+        { items.length ? (
+            <ul>
+                {items.map((item) => (  //Exception in React open brackets are required not curly brackets
+                    <li className='item' key={item.id}>
+    
+                        <input type="checkbox" checked={item.checked} onChange={()=>handleCheck(item.id)} />
+                        <label onDoubleClick={()=> handleCheck(item.id)} style={ (item.checked) ? { textDecoration: 'line-through'} : null}>{item.item}</label>
+                        <FaTrashAlt onClick={()=>handleDelete(item.id)} role='button' tabIndex="0"/>
+                    </li>
+                ))}
+            </ul>
+        ):(
+            <p style={{marginTop: '2rem'}}>Your list is empty</p>
+        )}
+
     </main>
   )
 }
