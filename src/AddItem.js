@@ -1,5 +1,5 @@
 import React from 'react'
-import {useRef} from 'react';
+import {useRef} from 'react';//To bring back the focus on input after clicking on the + icon automatically we use this React HOOk
 import { FaPlus } from 'react-icons/fa'
 const AddItem = ( {newItem, setNewItem, handleSubmit } ) => {
     const inputRef = useRef();
